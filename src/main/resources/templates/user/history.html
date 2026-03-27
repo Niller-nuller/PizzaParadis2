@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordrehistorik - PizzaProjekt</title>
+    <link rel="stylesheet" th:href="@{/css/Style.css}">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="/">PizzaProjekt</a>
+    <a th:href="@{/pizza/list}">Menu</a>
+    <th:block th:if="${session.loggedInUser == null}">
+        <a th:href="@{/user/login}">Log ind</a>
+        <a th:href="@{/user/register}">Opret bruger</a>
+    </th:block>
+    <th:block th:if="${session.loggedInUser != null}">
+        <span style="color:white; font-size:14px;" th:text="'Hej, ' + ${session.loggedInUser?.name}">Hej</span>
+        <a th:href="@{/user/logout}">Log ud</a>
+    </th:block>
+</nav>
+
+<div class="container">
+    <h1>Ordrehistorik</h1>
+
+    <div th:if="${#lists.isEmpty(orders)}">
+        <p>Du har ingen tidligere ordrer.</p>
+    </div>
+
+    <div th:each="order : ${orders}" class="order-card">
+        <p class="order-date" th:text="${#temporals.format(order.date, 'dd-MM-yyyy HH:mm')}"></p>
+        <ul>
+            <li th:each="pizza : ${order.pizzas}" th:text="${pizza.name}"></li>
+        </ul>
+        <p class="order-total" th:text="'Total: ' + ${order.totalPrice} + ' kr.'"></p>
+    </div>
+</div>
+
+</body>
+</html>

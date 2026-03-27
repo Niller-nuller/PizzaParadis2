@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Opret bruger - PizzaProjekt</title>
+    <link rel="stylesheet" th:href="@{/css/Style.css}">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="/">PizzaProjekt</a>
+    <a th:href="@{/pizza/list}">Menu</a>
+    <th:block th:if="${session.loggedInUser == null}">
+        <a th:href="@{/user/login}">Log ind</a>
+        <a th:href="@{/user/register}">Opret bruger</a>
+    </th:block>
+    <th:block th:if="${session.loggedInUser != null}">
+        <span style="color:white; font-size:14px;" th:text="'Hej, ' + ${session.loggedInUser?.name}">Hej</span>
+        <a th:href="@{/user/logout}">Log ud</a>
+    </th:block>
+</nav>
+
+<div class="container">
+    <div class="form-box">
+        <h2>Opret bruger</h2>
+        <form th:action="@{/user/register}" th:object="${user}" method="post">
+            <div class="form-group">
+                <label for="name">Navn</label>
+                <input type="text" id="name" th:field="*{name}" placeholder="Dit fulde navn" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="din@email.dk" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Adresse</label>
+                <input type="text" id="address" th:field="*{address}" placeholder="Gadenavn 1, 1234 By" required>
+            </div>
+            <button type="submit" class="btn">Opret konto</button>
+        </form>
+        <p>Har du allerede en konto? <a th:href="@{/user/login}">Log ind her</a></p>
+    </div>
+</div>
+
+</body>
+</html>

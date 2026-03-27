@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ny ordre - PizzaProjekt</title>
+    <link rel="stylesheet" th:href="@{/css/Style.css}">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="/">PizzaProjekt</a>
+    <a th:href="@{/pizza/list}">Menu</a>
+    <th:block th:if="${session.loggedInUser == null}">
+        <a th:href="@{/user/login}">Log ind</a>
+        <a th:href="@{/user/register}">Opret bruger</a>
+    </th:block>
+    <th:block th:if="${session.loggedInUser != null}">
+        <span style="color:white; font-size:14px;" th:text="'Hej, ' + ${session.loggedInUser?.name}">Hej</span>
+        <a th:href="@{/user/logout}">Log ud</a>
+    </th:block>
+</nav>
+
+<div class="container">
+    <h1>Din ordre</h1>
+
+    <div class="order-summary">
+        <table>
+            <thead>
+            <tr>
+                <th>Pizza</th>
+                <th>Pris</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pizza : ${order.pizzas}">
+                <td th:text="${pizza.name}"></td>
+                <td th:text="${pizza.totalPrice()} + ' kr.'"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Total: </strong><span th:text="${order.totalPrice} + ' kr.'"></span></p>
+
+        <form th:action="@{/order/confirm}" method="post">
+            <button type="submit" class="btn">Bekræft bestilling</button>
+        </form>
+        <a th:href="@{/pizza/list}" class="btn btn-secondary" style="margin-top:10px;">Tilføj flere pizzaer</a>
+    </div>
+</div>
+
+</body>
+</html>

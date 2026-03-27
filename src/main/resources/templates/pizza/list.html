@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu - PizzaProjekt</title>
+    <link rel="stylesheet" th:href="@{/css/Style.css}">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="/">PizzaProjekt</a>
+    <a th:href="@{/pizza/list}">Menu</a>
+    <th:block th:if="${session.loggedInUser == null}">
+        <a th:href="@{/user/login}">Log ind</a>
+        <a th:href="@{/user/register}">Opret bruger</a>
+    </th:block>
+    <th:block th:if="${session.loggedInUser != null}">
+        <span style="color:white; font-size:14px;" th:text="'Hej, ' + ${session.loggedInUser?.name}">Hej</span>
+        <a th:href="@{/user/logout}">Log ud</a>
+    </th:block>
+</nav>
+
+<div class="container">
+    <h1>Vores menu</h1>
+
+    <div class="pizza-grid">
+        <!--/*@thymesVar id="pizzas" type="java.util.List<dk.jonas.pizzaprojekt.domain.Pizza>"*/-->
+        <div th:each="pizza : ${pizzas}" class="pizza-card">
+            <h3 th:text="${pizza.name}"></h3>
+            <p th:text="${pizza.desc}"></p>
+            <p class="price" th:text="${pizza.price} + ' kr.'"></p>
+            <a th:href="@{/pizza/{id}(id=${pizza.id})}" class="btn">Se mere</a>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(pizzas)}">
+        <p>Ingen pizzaer er tilgængelige i øjeblikket.</p>
+    </div>
+</div>
+
+</body>
+</html>

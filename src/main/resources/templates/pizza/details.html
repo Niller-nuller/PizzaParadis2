@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pizza.name} + ' - PizzaProjekt'">Pizza - PizzaProjekt</title>
+    <link rel="stylesheet" th:href="@{/css/Style.css}">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="/">PizzaProjekt</a>
+    <a th:href="@{/pizza/list}">Menu</a>
+    <th:block th:if="${session.loggedInUser == null}">
+        <a th:href="@{/user/login}">Log ind</a>
+        <a th:href="@{/user/register}">Opret bruger</a>
+    </th:block>
+    <th:block th:if="${session.loggedInUser != null}">
+        <span style="color:white; font-size:14px;" th:text="'Hej, ' + ${session.loggedInUser?.name}">Hej</span>
+        <a th:href="@{/user/logout}">Log ud</a>
+    </th:block>
+</nav>
+
+<div class="container">
+    <div class="pizza-detail">
+        <h1 th:text="${pizza.name}"></h1>
+        <p th:text="${pizza.desc}"></p>
+
+        <h2>Toppings</h2>
+        <ul class="topping-list">
+            <li th:each="topping : ${pizza.toppings}">
+                <span th:text="${topping.name}"></span>
+                <span th:text="${topping.price} + ' kr.'"></span>
+            </li>
+        </ul>
+
+        <p class="price">Basispris: <strong th:text="${pizza.price} + ' kr.'"></strong></p>
+        <p class="price">Total: <strong th:text="${pizza.totalPrice()} + ' kr.'"></strong></p>
+
+        <a th:href="@{/order/new(pizzaName=${pizza.name})}" class="btn">Bestil denne pizza</a>
+        <a th:href="@{/pizza/list}" class="btn btn-secondary">Tilbage til menu</a>
+    </div>
+</div>
+
+</body>
+</html>
