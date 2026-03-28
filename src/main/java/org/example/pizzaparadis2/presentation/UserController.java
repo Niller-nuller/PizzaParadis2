@@ -56,8 +56,8 @@ public class UserController {
     }
 
     @GetMapping("/{email}/history")
-    public String history(Model model, @PathVariable String email) {
-        model.addAttribute("orders", userService.getOrderHistory(email));
+    public String history(Model model, @SessionAttribute("loggedInUser") User user) {
+        model.addAttribute("orders", userService.getOrderHistory(user));
         return "user/history";
     }
 }

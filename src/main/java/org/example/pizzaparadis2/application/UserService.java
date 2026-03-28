@@ -30,9 +30,15 @@ public class UserService {
         userRepo.updateUser(user);
     }
 
-    public List<Order> getOrderHistory(String email){
-        return userRepo.getHistoryFromEmail(email);
+    public List<Order> getOrderHistory(User user){
+        return userRepo.requestGettUseresOrderList(user);
     }
+
+//    public int handleUserBonusPoints(double totalPrice){
+//        int bonuspoints = (int)totalPrice%2;
+//
+//    }
+
     public User login(String email){
         return (userRepo.logUserIn(setNewUser(email)));
     }

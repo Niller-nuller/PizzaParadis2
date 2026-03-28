@@ -7,6 +7,6 @@ public interface IUserRepository {
     void createUser(User user);
     void updateUser(User user);
     void deleteUser(User user);
-    List<Order> getHistoryFromEmail(String email);
+    List<Order> requestGettUseresOrderList(User user);
     User logUserIn(User user);
 }

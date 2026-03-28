@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/pizza")
 public class PizzaController {
 
     private final PizzaService pizzaService;
@@ -16,16 +19,15 @@ public class PizzaController {
         this.pizzaService = pizzaService;
     }
 
-    @GetMapping("/pizza/list")
+    @GetMapping("/list")
     public String pizzaList(Model model) {
         model.addAttribute("pizzas", pizzaService.getListOfPizza());
-        return "pizza/list";
+        return "/pizza/list";
     }
 
-    @GetMapping("/pizza/{id}")
+    @GetMapping("/{id}")
     public String pizzaDetail(@PathVariable int id, Model model) {
         model.addAttribute("pizza", pizzaService.getPizzaById(id));
-        return "pizza/details";
+        return "/pizza/details";
     }
-
 }

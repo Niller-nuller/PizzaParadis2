@@ -1,8 +1,6 @@
 package org.example.pizzaparadis2.infrastructure;
 
-import org.example.pizzaparadis2.domain.IUserRepository;
-import org.example.pizzaparadis2.domain.Order;
-import org.example.pizzaparadis2.domain.User;
+import org.example.pizzaparadis2.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -51,7 +49,45 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<Order> getHistoryFromEmail(String email) {
-        return null;
+    public List<Order> requestGettUseresOrderList(User user) {
+        String sql = """
+                SELECT * FROM Orders 
+                WHERE O.UserId = ?
+                ORDER BY O.OrderDate DESC""";
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new Order(
+                        rs.getInt("OrderId"),
+                        rs.getTimestamp("OrderDate").toLocalDateTime(),
+                        requestGetPizzasOrderList(rs.getInt("OrderId")),
+                        rs.getDouble("TotalPrice")
+                ),user.getId()
+        );
+    }
+
+    private List<Pizza> requestGetPizzasOrderList(int orderId) {
+        String sql = """
+                 SELECT * FROM Pizza P
+                 JOIN Order_Items OI ON P.PizzaId = OI.PizzaId
+                 WHERE OI.OrderId = ?""";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new Pizza(
+                        rs.getInt("PizzaId"),
+                        rs.getString("Name"),
+                        rs.getString("Description"),
+                        rs.getDouble("Price"),
+                        requestGetToppingsByPizzaId(rs.getInt("PizzaId"))
+                ), orderId
+        );
+    }
+    private List<Topping> requestGetToppingsByPizzaId(int pizzaId) {
+        String sql = "SELECT * FROM Toppings T JOIN Pizza_Toppings PT ON T.ToppingId = PT.ToppingId WHERE PT.PizzaId = ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new Topping (
+                        rs.getInt("ToppingId"),
+                        rs.getString("Name"),
+                        rs.getDouble("Price")
+                ), pizzaId
+        );
     }
 }
